@@ -1,0 +1,17 @@
+#acc-container{
+  width: 50%;
+  margin: auto;
+}
+
+#ad-adder{
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+#edit_buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
