@@ -1,6 +1,6 @@
 #acc-container{
   width: 50%;
-  margin: auto;
+  margin: 20px auto auto;
 }
 
 #ad-adder{
@@ -9,9 +9,17 @@
   left: 10px;
 }
 
-#edit_buttons{
+#edit-buttons{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 }
+
+#title{
+  width: 50%;
+  margin: auto;
+  text-align: center;
+}
+
+
 
