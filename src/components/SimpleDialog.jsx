@@ -6,13 +6,17 @@ import locale    from 'react-json-editor-ajrm/locale/en';
 import Button from "@mui/material/Button";
 import err from "react-json-editor-ajrm/err";
 
-const json_object = {
-    name : "nadav",
-    age: 18
+const jsonPlaceholder = {
+    ids: [1,2,3],
+    messageName: "message10",
+    title: "The tinder swindler",
+    textFields:["this is a sample"],
+    templateSrc: "\"./templates/templateA.html\"",
+
 }
 
 export default function SimpleDialog({ onClose, selectedValue, open, onAdAdded }) {
-    const [error, setError] = React.useState(false);
+    const [error, setError] = React.useState(true);
     const myRef = React.createRef();
 
     const handleChange = (e) => {
@@ -32,7 +36,7 @@ export default function SimpleDialog({ onClose, selectedValue, open, onAdAdded }
                 <DialogTitle>Add New Ad</DialogTitle>
                 <JSONInput
                     id          = 'a_unique_id'
-                    placeholder = { json_object }
+                    placeholder = { jsonPlaceholder }
                     theme       = "light_mitsuketa_tribute"
                     locale      = { locale }
                     height      = '550px'

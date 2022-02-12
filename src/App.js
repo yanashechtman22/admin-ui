@@ -5,19 +5,8 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import IconButton from '@mui/material/IconButton';
 import './components/App.css'
 import {Divider, Typography, Snackbar} from "@mui/material";
-
-const adsMock = [
-    {
-        title: "ad 1",
-        name: "linoy",
-        age: 18
-    },
-    {
-        title: "ad 2",
-        name: "yana",
-        age: 18
-    }
-]
+import * as Service from './services/AdsService';
+import LoginScreen from "./components/LoginScreen";
 
 const action = (
     <IconButton
@@ -27,48 +16,88 @@ const action = (
     >
         <RefreshIcon fontSize="small"/>
     </IconButton>
-)
+);
 
 export default function App() {
-    const [clientsConnected,setClientsConnected] = React.useState(0);
-    const [ads, setAds] = React.useState(adsMock);
+    const [clientsConnected, setClientsConnected] = React.useState(0);
+    const [ads, setAds] = React.useState([]);
+    const [errorMessage, setErrorMessage] = React.useState("");
+    const [requireLogin, setRequireLogin] = React.useState(false)
 
-    React.useEffect(()=>{
-        fetch('http://localhost:3000')
-    },[])
+    React.useEffect(() => {
+        Service.getMessagesFromServer((results) => {
+            if (results.redirected) {
+                setRequireLogin(true);
+            } else {
+                setAds(results);
+            }
+        });
+    }, [requireLogin]);
+
     const onAdAdded = (newAd) => {
         ads.push(newAd);
-        setAds([...ads]);
+        Service.adNewAd(newAd, (result) => {
+            if (result) {
+                setAds([...ads]);
+            }
+        });
     }
 
-    const onAdDeleted = (adTitle) => {
-        const removedArr = [...ads].filter((ad) => ad.title !== adTitle);
-        setAds(removedArr);
-
+    const onAdUpdated = (updatedAd) => {
+        const updatedArr = ads.map(ad => ad.messageName === updatedAd.messageName ? updatedAd : ad);
+        Service.updateAd(updatedAd, (result) => {
+            if (result) {
+                setAds(updatedArr);
+            }
+        });
     }
+
+    const onAdDeleted = (adMessageName) => {
+        const removedArr = [...ads].filter((ad) => ad.messageName !== adMessageName);
+        Service.removeAd(adMessageName, (result) => {
+            if (result) {
+                setAds(removedArr);
+            }
+        });
+    }
+
+    const handleLogin = (username, password) => {
+        Service.auth(username, password, (result) => {
+            if (result) {
+                setRequireLogin(false);
+            } else {
+                setErrorMessage("Incorrect username or password");
+            }
+        });
+    }
+
     const onRefreshClick = () => {
         setClientsConnected(clientsConnected + 1)
     }
     const message = "clients. connected: " + clientsConnected + "\ndisconnected: " + clientsConnected;
 
     return (
-        <div>
-            <Typography id="title">Welcome to the admins control center!</Typography>
-            <Divider/>
-            <AccordionContainer ads={ads}
-                                onAdDeleted={onAdDeleted}
-            />
-            <AdAdder onAdAdded={onAdAdded}
-            />
-            <Snackbar id="clients-snackbar"
-                      onClick={onRefreshClick}
-                      open={true}
-                      message={message}
-                      action={action}
-                      anchorOrigin={{vertical:'bottom',horizontal:'right'}}
-            />
+        requireLogin ?
+            <LoginScreen handleLogin={handleLogin} errorMessage={errorMessage}/>
+            :
+            <div>
+                <Typography id="title">Welcome to the admins control center!</Typography>
+                <Divider/>
+                <AccordionContainer ads={ads}
+                                    onAdDeleted={onAdDeleted}
+                                    onAdUpdated={onAdUpdated}
+                />
+                <AdAdder onAdAdded={onAdAdded}
+                />
+                <Snackbar id="clients-snackbar"
+                          onClick={onRefreshClick}
+                          open={true}
+                          message={message}
+                          action={action}
+                          anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                />
 
 
-        </div>
+            </div>
     );
 }

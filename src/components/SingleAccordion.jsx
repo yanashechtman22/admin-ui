@@ -15,9 +15,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function SingleAccordion({ad, onAdDeleted}) {
+export default function SingleAccordion({ad, onAdDeleted, onAdUpated}) {
     const [error, setError] = React.useState(true)
     const [open, setOpen] = React.useState(false)
+    const myRef = React.createRef();
 
     const handleChange = (e) => {
         setError(e.error ? true : false);
@@ -33,7 +34,13 @@ export default function SingleAccordion({ad, onAdDeleted}) {
 
     const onDelete = () => {
         setOpen(false);
-        onAdDeleted(ad.title);
+        onAdDeleted(ad.messageName);
+    }
+
+    const onUpdate = () => {
+        setOpen(false)
+        let updatedAd = myRef.current.state.jsObject;
+        onAdUpated(updatedAd);
     }
 
     return (
@@ -53,11 +60,14 @@ export default function SingleAccordion({ad, onAdDeleted}) {
                         locale={locale}
                         onChange={handleChange}
                         theme="light_mitsuketa_tribute"
+                        ref = {myRef}
+
                     />
                     <div id="edit-buttons">
                         <Button variant="contained"
                                 disabled={error}
                                 startIcon={<EditIcon/>}
+                                onClick={onUpdate}
                         >Confirm</Button>
                         <Button variant="contained"
                                 startIcon={<DeleteIcon/>}
