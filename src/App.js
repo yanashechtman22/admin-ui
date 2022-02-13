@@ -4,10 +4,12 @@ import AdAdder from "./components/AdAdder";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import IconButton from '@mui/material/IconButton';
 import './components/App.css'
-import {Divider, Typography, Snackbar} from "@mui/material";
+import {Divider, Snackbar, Typography} from "@mui/material";
 import * as Service from './services/AdsService';
 import LoginScreen from "./components/LoginScreen";
+import io from 'socket.io-client';
 
+const socket = io.connect('http://localhost:3000');
 const action = (
     <IconButton
         size="small"
@@ -19,6 +21,7 @@ const action = (
 );
 
 export default function App() {
+    const [count, setUserCount] = React.useState(0);
     const [clientsConnected, setClientsConnected] = React.useState(0);
     const [ads, setAds] = React.useState([]);
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -32,7 +35,11 @@ export default function App() {
                 setAds(results);
             }
         });
-    }, [requireLogin]);
+        socket.on('message', function (data) {
+            console.log(data.count);
+            setUserCount(data.count);
+        });
+    }, [requireLogin, count]);
 
     const onAdAdded = (newAd) => {
         ads.push(newAd);
@@ -81,6 +88,7 @@ export default function App() {
             <LoginScreen handleLogin={handleLogin} errorMessage={errorMessage}/>
             :
             <div>
+                <div>{count}</div>
                 <Typography id="title">Welcome to the admins control center!</Typography>
                 <Divider/>
                 <AccordionContainer ads={ads}
