@@ -7,22 +7,11 @@ import './components/App.css'
 import {Divider, Snackbar, Typography} from "@mui/material";
 import * as Service from './services/AdsService';
 import LoginScreen from "./components/LoginScreen";
-import io from 'socket.io-client';
+import UsersCount from "./components/UsersCount";
 
-const socket = io.connect('http://localhost:3000');
-const action = (
-    <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-    >
-        <RefreshIcon fontSize="small"/>
-    </IconButton>
-);
+
 
 export default function App() {
-    const [count, setUserCount] = React.useState(0);
-    const [clientsConnected, setClientsConnected] = React.useState(0);
     const [ads, setAds] = React.useState([]);
     const [errorMessage, setErrorMessage] = React.useState("");
     const [requireLogin, setRequireLogin] = React.useState(false)
@@ -35,11 +24,7 @@ export default function App() {
                 setAds(results);
             }
         });
-        socket.on('message', function (data) {
-            console.log(data.count);
-            setUserCount(data.count);
-        });
-    }, [requireLogin, count]);
+    }, [requireLogin]);
 
     const onAdAdded = (newAd) => {
         ads.push(newAd);
@@ -78,17 +63,11 @@ export default function App() {
         });
     }
 
-    const onRefreshClick = () => {
-        setClientsConnected(clientsConnected + 1)
-    }
-    const message = "clients. connected: " + clientsConnected + "\ndisconnected: " + clientsConnected;
-
     return (
         requireLogin ?
             <LoginScreen handleLogin={handleLogin} errorMessage={errorMessage}/>
             :
             <div>
-                <div>{count}</div>
                 <Typography id="title">Welcome to the admins control center!</Typography>
                 <Divider/>
                 <AccordionContainer ads={ads}
@@ -97,15 +76,7 @@ export default function App() {
                 />
                 <AdAdder onAdAdded={onAdAdded}
                 />
-                <Snackbar id="clients-snackbar"
-                          onClick={onRefreshClick}
-                          open={true}
-                          message={message}
-                          action={action}
-                          anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-                />
-
-
+                <UsersCount/>
             </div>
     );
 }

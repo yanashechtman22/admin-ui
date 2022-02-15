@@ -64,6 +64,16 @@ export const getMessagesFromServer = (callback) => {
         })
 };
 
+export const getActiveUsersCount = (callback) => {
+    fetch('http://localhost:3000/api/admin/active-users',{
+        credentials: 'include',
+    })
+        .then(results => {
+            results.json()
+                .then(data=> callback(data))
+        })
+};
+
 export const adNewAd = (ad, callback) => {
     fetch('http://localhost:3000/api/admin/create', {
         method: 'post',
@@ -79,6 +89,5 @@ export const adNewAd = (ad, callback) => {
                 callback(false)
             }
         })
-
 }
 
