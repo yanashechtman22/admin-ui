@@ -10,7 +10,6 @@ import LoginScreen from "./components/LoginScreen";
 import UsersCount from "./components/UsersCount";
 
 
-
 export default function App() {
     const [ads, setAds] = React.useState([]);
     const [errorMessage, setErrorMessage] = React.useState("");

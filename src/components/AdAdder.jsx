@@ -3,7 +3,7 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import SimpleDialog from "./SimpleDialog";
 
-export default function AdAdder({onAdAdded,onAdDeleted}) {
+export default function AdAdder({onAdAdded, onAdDeleted}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {

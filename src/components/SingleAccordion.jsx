@@ -60,7 +60,7 @@ export default function SingleAccordion({ad, onAdDeleted, onAdUpated}) {
                         locale={locale}
                         onChange={handleChange}
                         theme="light_mitsuketa_tribute"
-                        ref = {myRef}
+                        ref={myRef}
 
                     />
                     <div id="edit-buttons">
