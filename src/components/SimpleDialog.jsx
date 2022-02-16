@@ -11,7 +11,7 @@ const jsonPlaceholder = {
     messageName: "message10",
     title: "The tinder swindler",
     textFields: ["this is a sample"],
-    templateSrc: "\"./templates/templateA.html\"",
+    templateSrc: "",
 
 }
 
